@@ -21,6 +21,7 @@ export default {
 </script>
 
 <style lang="less">
+@import './common/style/mixin.less';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -34,6 +35,7 @@ export default {
   width: 100%;
   height: 40px;
   line-height: 40px;
+  .border-1px(rgba(7,17,27,.1));
   .tab-item {
     flex: 1;
     text-align: center;
