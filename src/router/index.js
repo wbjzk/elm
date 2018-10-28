@@ -8,26 +8,27 @@ import seller from '@/components/seller/seller';
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
-    	path: '/',
-    	name: 'home',
-    	redirect: '/goods',
-    },
-    {
-    	path: '/goods',
-    	name: 'goods',
-    	component: goods,
-    },
-    {
-        path: '/ratings',
-        name: 'ratings',
-        component: ratings,
-    },
-    {
-        path: '/seller',
-        name: 'seller',
-        component: seller,
-    }
-  ]
+    routes: [
+        {
+        	path: '/',
+        	name: 'home',
+        	redirect: '/goods',
+        },
+        {
+        	path: '/goods',
+        	name: 'goods',
+        	component: goods,
+        },
+        {
+            path: '/ratings',
+            name: 'ratings',
+            component: ratings,
+        },
+        {
+            path: '/seller',
+            name: 'seller',
+            component: seller,
+        },
+    ],
+    linkActiveClass: 'active',
 });
