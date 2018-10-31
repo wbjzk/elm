@@ -5,6 +5,7 @@ import App from './App';
 import router from './router';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import '@/common/style/index.less';
 
 Vue.use(VueAxios, axios);
 
