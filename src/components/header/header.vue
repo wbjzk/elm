@@ -28,7 +28,18 @@
 		<div class="background">
 			<img :src="seller.avatar" width="100%" height="100%">
 		</div>
-		<div class="detail" v-show="detailShow"></div>
+		<div class="detail" v-show="detailShow">
+			<div class="detail-warapper clearfix">
+				<div class="detail-main">
+					<p>{{ seller.bulletin }}</p>
+					<p>{{ seller.bulletin }}</p>
+					<p>{{ seller.bulletin }}</p>
+				</div>
+			</div>
+			<div class="detail-close">
+				<i class="icon-close"></i>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -200,6 +211,25 @@ export default {
 		height: 100%;
 		overflow: auto;
 		background: rgba(7,17,27,.8);
+		.detail-warapper {
+			min-height: 100%;
+			.detail-main {
+				margin-top: 64px;
+				padding-bottom: 64px;
+			}
+		}
+		.detail-close {
+			background: #ccc;
+			position: relative;
+			width: 32px;
+			height: 32px;
+			margin: -64px auto 0 auto;
+			clear: both;
+			font-size: 32px;
+			.icon-close {
+
+			}
+		}
 	}
 }
 </style>
