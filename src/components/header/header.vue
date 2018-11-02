@@ -17,12 +17,12 @@
 					<span class="text">{{ seller.supports[0].description }}</span>
 				</div>
 			</div>
-			<div class="support-count" @click="showDetail">
+			<div class="support-count" @click="toggleDetail">
 				<span class="count" v-if="seller.supports">{{ seller.supports.length }}个</span>
 				<i class="icon-keyboard_arrow_right"></i>
 			</div>
 		</div>
-		<div class="bulletin-wrapper" @click="showDetail">
+		<div class="bulletin-wrapper" @click="toggleDetail">
 			<span class="bulletin-title"></span><span class="bulletin-text">{{ seller.bulletin }}</span><i class="icon-keyboard_arrow_right"></i>
 		</div>
 		<div class="background">
@@ -36,7 +36,7 @@
 					<p>{{ seller.bulletin }}</p>
 				</div>
 			</div>
-			<div class="detail-close">
+			<div class="detail-close" @click="toggleDetail">
 				<i class="icon-close"></i>
 			</div>
 		</div>
@@ -58,8 +58,8 @@ export default {
 		}
 	},
 	methods: {
-		showDetail() {
-			this.detailShow = true;
+		toggleDetail() {
+			this.detailShow = !this.detailShow;
 		}
 	}
 }
