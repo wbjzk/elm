@@ -31,9 +31,10 @@
 		<div class="detail" v-show="detailShow">
 			<div class="detail-warapper clearfix">
 				<div class="detail-main">
-					<p>{{ seller.bulletin }}</p>
-					<p>{{ seller.bulletin }}</p>
-					<p>{{ seller.bulletin }}</p>
+					<h2 class="name">{{ seller.name }}</h2>
+					<div class="star-wrapper">
+						<star :size="48" :score="seller.score"></star>
+					</div>
 				</div>
 			</div>
 			<div class="detail-close" @click="toggleDetail">
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+import star from '@/components/star/star';
 export default {
 	data() {
 		return {
@@ -61,6 +63,9 @@ export default {
 		toggleDetail() {
 			this.detailShow = !this.detailShow;
 		}
+	},
+	components: {
+		star
 	}
 }
 </script>
@@ -212,14 +217,26 @@ export default {
 		overflow: auto;
 		background: rgba(7,17,27,.8);
 		.detail-warapper {
+			width: 100%;
 			min-height: 100%;
 			.detail-main {
 				margin-top: 64px;
 				padding-bottom: 64px;
+				.name {
+					line-height: 16px;
+					text-align: center;
+					font-size: 16px;
+					font-weight: bold;
+				}
+				.star-wrapper {
+					margin-top: 18px;
+					padding: 2px 0;
+					text-align: center;
+				}
 			}
 		}
 		.detail-close {
-			background: #ccc;
+			// background: #ccc;
 			position: relative;
 			width: 32px;
 			height: 32px;
