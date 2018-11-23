@@ -35,6 +35,7 @@
 					<div class="star-wrapper">
 						<star :size="48" :score="seller.score"></star>
 					</div>
+					<div is="v-line" :title="'优惠信息'"></div>
 				</div>
 			</div>
 			<div class="detail-close" @click="toggleDetail">
@@ -45,7 +46,8 @@
 </template>
 
 <script>
-import star from '@/components/star/star';
+import Star from '@/components/star/star';
+import Line from '@/components/line/line';
 export default {
 	data() {
 		return {
@@ -65,7 +67,8 @@ export default {
 		}
 	},
 	components: {
-		star
+		Star,
+		'v-line': Line
 	}
 }
 </script>
