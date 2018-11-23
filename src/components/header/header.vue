@@ -42,6 +42,10 @@
 							<span class="text">{{ seller.supports[i].description }}</span>
 						</li>
 					</ul>
+					<div is="v-line" :title="'商家公告'"></div>
+					<div class="bulletin">
+						<p class="content">{{ seller.bulletin }}</p>
+					</div>
 				</div>
 			</div>
 			<div class="detail-close" @click="toggleDetail">
@@ -283,6 +287,15 @@ export default {
 							line-height: 16px;
 							font-size: 12px;
 						}
+					}
+				}
+				.bulletin {
+					width: 80%;
+					margin: 0 auto;
+					.conent {
+						padding: 0 12px;
+						line-height: 24px;
+						font-size: 12px;
 					}
 				}
 			}
