@@ -28,30 +28,32 @@
 		<div class="background">
 			<img :src="seller.avatar" width="100%" height="100%">
 		</div>
-		<div class="detail" v-show="detailShow">
-			<div class="detail-warapper clearfix">
-				<div class="detail-main">
-					<h2 class="name">{{ seller.name }}</h2>
-					<div class="star-wrapper">
-						<star :size="48" :score="seller.score"></star>
-					</div>
-					<div is="v-line" :title="'优惠信息'"></div>
-					<ul class="supports" v-if="seller.supports">
-						<li class="support-item" v-for="(item, i) in seller.supports" :key="i">
-							<span class="icon" :class="classMap[seller.supports[i].type]"></span>
-							<span class="text">{{ seller.supports[i].description }}</span>
-						</li>
-					</ul>
-					<div is="v-line" :title="'商家公告'"></div>
-					<div class="bulletin">
-						<p class="content">{{ seller.bulletin }}</p>
+		<transition name="fade">
+			<div class="detail" v-show="detailShow">
+				<div class="detail-warapper clearfix">
+					<div class="detail-main">
+						<h2 class="name">{{ seller.name }}</h2>
+						<div class="star-wrapper">
+							<star :size="48" :score="seller.score"></star>
+						</div>
+						<div is="v-line" :title="'优惠信息'"></div>
+						<ul class="supports" v-if="seller.supports">
+							<li class="support-item" v-for="(item, i) in seller.supports" :key="i">
+								<span class="icon" :class="classMap[seller.supports[i].type]"></span>
+								<span class="text">{{ seller.supports[i].description }}</span>
+							</li>
+						</ul>
+						<div is="v-line" :title="'商家公告'"></div>
+						<div class="bulletin">
+							<p class="content">{{ seller.bulletin }}</p>
+						</div>
 					</div>
 				</div>
+				<div class="detail-close" @click="toggleDetail">
+					<i class="icon-close"></i>
+				</div>
 			</div>
-			<div class="detail-close" @click="toggleDetail">
-				<i class="icon-close"></i>
-			</div>
-		</div>
+		</transition>
 	</div>
 </template>
 
@@ -232,6 +234,14 @@ export default {
 		height: 100%;
 		overflow: auto;
 		background: rgba(7,17,27,.8);
+		&.fade-enter-active,
+		&.fade-leave-active {
+			transition: opacity 1S;
+		}
+		&.fade-enter,
+		&.fade-leave-to {
+			opacity: 0;
+		}
 		.detail-warapper {
 			width: 100%;
 			min-height: 100%;
