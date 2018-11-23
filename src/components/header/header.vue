@@ -36,6 +36,12 @@
 						<star :size="48" :score="seller.score"></star>
 					</div>
 					<div is="v-line" :title="'优惠信息'"></div>
+					<ul class="supports" v-if="seller.supports">
+						<li class="support-item" v-for="(item, i) in seller.supports" :key="i">
+							<span class="icon" :class="classMap[seller.supports[i].type]"></span>
+							<span class="text">{{ seller.supports[i].description }}</span>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<div class="detail-close" @click="toggleDetail">
@@ -49,6 +55,9 @@
 import Star from '@/components/star/star';
 import Line from '@/components/line/line';
 export default {
+	created() {
+		console.log(JSON.stringify(this.seller.supports, null, 4));
+	},
 	data() {
 		return {
 			classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
@@ -235,6 +244,46 @@ export default {
 					margin-top: 18px;
 					padding: 2px 0;
 					text-align: center;
+				}
+				.supports {
+					width: 80%;
+					margin: 0 auto;
+					.support-item {
+						padding: 0 12px;
+						margin-bottom: 12px;
+						font-size: 0;
+						&:last-child {
+							margin-bottom: 0;
+						}
+						.icon {
+							display: inline-block;
+							width: 16px;
+							height: 16px;
+							vertical-align: top;
+							margin-right: 6px;
+							background-size: 16px 16px;
+							background-repeat: no-repeat;
+							&.decrease {
+								.bg-image('decrease_2');
+							}
+							&.discount {
+								.bg-image('discount_2');
+							}
+							&.guarantee {
+								.bg-image('guarantee_2');
+							}
+							&.invoice {
+								.bg-image('invoice_2');
+							}
+							&.special {
+								.bg-image('special_2');
+							}
+						}
+						.text {
+							line-height: 16px;
+							font-size: 12px;
+						}
+					}
 				}
 			}
 		}
