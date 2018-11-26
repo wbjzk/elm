@@ -13,7 +13,8 @@
 					{{ seller.description }}/{{ seller.deliveryTime }}分钟送达
 				</div>
 				<div class="support" v-if="seller.supports">
-					<span class="icon" :class="classMap[seller.supports[0].type]"></span>
+					<!-- <span class="icon" :class="classMap[seller.supports[0].type]"></span> -->
+					<v-icon :type="seller.supports[0].type" :num="1"></v-icon>
 					<span class="text">{{ seller.supports[0].description }}</span>
 				</div>
 			</div>
@@ -39,7 +40,7 @@
 						<div is="v-line" :title="'优惠信息'"></div>
 						<ul class="supports" v-if="seller.supports">
 							<li class="support-item" v-for="(item, i) in seller.supports" :key="i">
-								<span class="icon" :class="classMap[seller.supports[i].type]"></span>
+								<v-icon :type="seller.supports[i].type" :num="2"></v-icon>
 								<span class="text">{{ seller.supports[i].description }}</span>
 							</li>
 						</ul>
@@ -60,6 +61,7 @@
 <script>
 import Star from '@/components/star/star';
 import Line from '@/components/line/line';
+import Icon from '@/components/icon/icon';
 export default {
 	created() {
 		console.log(JSON.stringify(this.seller.supports, null, 4));
@@ -83,7 +85,8 @@ export default {
 	},
 	components: {
 		Star,
-		'v-line': Line
+		'v-line': Line,
+		'v-icon': Icon,
 	}
 }
 </script>
@@ -142,21 +145,21 @@ export default {
 					margin-right: 4px;
 					background-size: 12px 12px;
 					background-repeat: no-repeat;
-					&.decrease {
-						.bg-image('decrease_1');
-					}
-					&.discount {
-						.bg-image('discount_1');
-					}
-					&.guarantee {
-						.bg-image('guarantee_1');
-					}
-					&.invoice {
-						.bg-image('invoice_1');
-					}
-					&.special {
-						.bg-image('special_1');
-					}
+					// &.decrease {
+					// 	.bg-image('decrease_1');
+					// }
+					// &.discount {
+					// 	.bg-image('discount_1');
+					// }
+					// &.guarantee {
+					// 	.bg-image('guarantee_1');
+					// }
+					// &.invoice {
+					// 	.bg-image('invoice_1');
+					// }
+					// &.special {
+					// 	.bg-image('special_1');
+					// }
 				}
 				.text {
 					line-height: 12px;
@@ -277,21 +280,21 @@ export default {
 							margin-right: 6px;
 							background-size: 16px 16px;
 							background-repeat: no-repeat;
-							&.decrease {
-								.bg-image('decrease_2');
-							}
-							&.discount {
-								.bg-image('discount_2');
-							}
-							&.guarantee {
-								.bg-image('guarantee_2');
-							}
-							&.invoice {
-								.bg-image('invoice_2');
-							}
-							&.special {
-								.bg-image('special_2');
-							}
+							// &.decrease {
+							// 	.bg-image('decrease_2');
+							// }
+							// &.discount {
+							// 	.bg-image('discount_2');
+							// }
+							// &.guarantee {
+							// 	.bg-image('guarantee_2');
+							// }
+							// &.invoice {
+							// 	.bg-image('invoice_2');
+							// }
+							// &.special {
+							// 	.bg-image('special_2');
+							// }
 						}
 						.text {
 							line-height: 16px;
