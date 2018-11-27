@@ -66,4 +66,23 @@ export default {
 .special-2 {
 	.bg-image('special_2');
 }
+.decrease-3 {
+	.bg-image('decrease_3');
+}
+
+.discount-3 {
+	.bg-image('discount_3');
+}
+
+.gurantee-3 {
+	.bg-image('guarantee_3');
+}
+
+.invoice-3 {
+	.bg-image('invoice_3');
+}
+
+.special-3 {
+	.bg-image('special_3');
+}
 </style>
