@@ -1,6 +1,6 @@
 <template>
 	<div class="goods">
-		<div class="menu-wrapper">
+		<div class="menu-wrapper" ref="menuWrapper">
 			<ul>
 				<li class="menu-item" v-for="(item, i) in goods" :key="i">
 					<span class="text border-1px">
@@ -9,7 +9,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="foods-wrapper">
+		<div class="foods-wrapper" ref="foodsWrapper">
 			<ul>
 				<li class="food-list" v-for="(item, i) in goods" :key="i">
 					<h2 class="title">{{ item.name }}</h2>
@@ -38,6 +38,7 @@
 	</div>
 </template>
 <script>
+import BScroll from 'better-scroll';
 import icon from '@/components/icon/icon.vue';
 const ERR_OK = 0;
 export default {
@@ -56,8 +57,17 @@ export default {
 		this.axios('api/goods').then(res => {
 			if (res.data.errno === ERR_OK) {
 				this.goods = res.data.goods;
+				this.$nextTick(() => {
+					this._initScroll();
+				});
 			}
 		});
+	},
+	methods: {
+		_initScroll() {
+			this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+			this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {});
+		}
 	},
 	components: {
 		'v-icon': icon
@@ -66,6 +76,9 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../../common/style/mixin.less";
+* {
+	touch-action: pan-y;
+}
 .goods {
 	display: flex;
 	position: absolute;
@@ -143,6 +156,7 @@ export default {
 					}
 					.desc {
 						margin-bottom: 8px;
+						line-height: 12px;
 					}
 					.extra {
 						& .count {
