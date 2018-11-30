@@ -2,7 +2,7 @@
 	<div class="goods">
 		<div class="menu-wrapper" ref="menuWrapper">
 			<ul>
-				<li class="menu-item" v-for="(item, i) in goods" :key="i">
+				<li class="menu-item" :class="{ 'current':currentIndex===i }" v-for="(item, i) in goods" :key="i">
 					<span class="text border-1px">
 						<v-icon v-show="item.type > 0" :type="item.type" :num="3"></v-icon>{{ item.name }}
 					</span>
@@ -11,7 +11,7 @@
 		</div>
 		<div class="foods-wrapper" ref="foodsWrapper">
 			<ul>
-				<li class="food-list" v-for="(item, i) in goods" :key="i">
+				<li class="food-list food-list-hook" v-for="(item, i) in goods" :key="i">
 					<h2 class="title">{{ item.name }}</h2>
 					<ul>
 						<li class="food-item" v-for="(food, i) in item.foods" :key="i">
@@ -50,7 +50,9 @@ export default {
 	},
 	data() {
 		return {
-			goods: []
+			goods: [],
+			listHeight: [],
+			scrollY: 0,
 		};
 	},
 	created() {
@@ -59,6 +61,7 @@ export default {
 				this.goods = res.data.goods;
 				this.$nextTick(() => {
 					this._initScroll();
+					this._calculateHeight();
 				});
 			}
 		});
@@ -66,8 +69,35 @@ export default {
 	methods: {
 		_initScroll() {
 			this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
-			this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {});
+			this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+				probeType: 3
+			});
+			this.foodsScroll.on('scroll', pos => {
+				this.scrollY = Math.abs(Math.round(pos.y));
+			});
+		},
+		_calculateHeight() {
+			let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+			let height = 0;
+			this.listHeight.push(height);
+			for (let i = 0; i < foodList.length; i++) {
+				let item = foodList[i];
+				height += item.clientHeight;
+				this.listHeight.push(height);
+			}
 		}
+	},
+	computed: {
+		currentIndex() {
+			for (let i = 0; i < this.listHeight.length; i++) {
+				let height1 = this.listHeight[i];
+				let height2 = this.listHeight[i+1];
+				if(!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+					return i;
+				}
+			}
+			return 0;
+		},
 	},
 	components: {
 		'v-icon': icon
@@ -96,6 +126,17 @@ export default {
 			width: 56px;
 			line-height: 14px;
 			padding: 0 12px;
+			line-height: 14px;
+			&.current {
+				position: relative;
+				margin-top: -1px;
+				z-index: 10;
+				background-color: #fff;
+				font-weight: bold;
+				.text {
+					.border-none();
+				}
+			}
 			.icon {
 				display: inline-block;
 				vertical-align: top;
