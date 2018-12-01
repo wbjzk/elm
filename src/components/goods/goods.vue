@@ -2,7 +2,7 @@
 	<div class="goods">
 		<div class="menu-wrapper" ref="menuWrapper">
 			<ul>
-				<li class="menu-item" :class="{ 'current':currentIndex===i }" v-for="(item, i) in goods" :key="i">
+				<li class="menu-item" :class="{ 'current':currentIndex===i }" v-for="(item, i) in goods" :key="i" @click="selectMenu(i, $event)">
 					<span class="text border-1px">
 						<v-icon v-show="item.type > 0" :type="item.type" :num="3"></v-icon>{{ item.name }}
 					</span>
@@ -67,8 +67,18 @@ export default {
 		});
 	},
 	methods: {
+		selectMenu(index, event) {
+			if(!event._constructed) { // 过滤原生事件
+				return;
+			}
+			let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook'); // 获取右侧DOM元素列表
+			let el = foodList[index]; // 获取DOM元素
+			this.foodsScroll.scrollToElement(el, 500); // 调整滚动到对应位置
+		},
 		_initScroll() {
-			this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+			this.menuScroll = new BScroll(this.$refs.menuWrapper, {
+				click: true,	// 启用单击事件
+			});
 			this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
 				probeType: 3
 			});
