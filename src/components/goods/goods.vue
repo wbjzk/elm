@@ -35,11 +35,13 @@
 				</li>
 			</ul>
 		</div>
+		<v-shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></v-shopcart>
 	</div>
 </template>
 <script>
 import BScroll from 'better-scroll';
 import icon from '@/components/icon/icon.vue';
+import shopcart from '@/components/shopcart/shopcart.vue';
 const ERR_OK = 0;
 export default {
 	props: {
@@ -110,7 +112,8 @@ export default {
 		},
 	},
 	components: {
-		'v-icon': icon
+		'v-icon': icon,
+		'v-shopcart': shopcart,
 	}
 };
 </script>
