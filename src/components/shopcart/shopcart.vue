@@ -3,11 +3,11 @@
 		<div class="content">
 			<div class="content-left">
 				<div class="logo-wrapper">
-					<div class="logo" :class="{ 'highlight': totalCount>0 }">
-						<span class="icon-shopping_cart" :class="{ 'highlight': totalCount>0 }"></span>
+					<div class="logo" :class="{ 'highlight': totalCount > 0 }">
+						<span class="icon-shopping_cart" :class="{ 'highlight': totalCount > 0 }"></span>
 					</div>
 				</div>
-				<div class="price" :class="{ 'highlight': totalPrice>0 }">{{ totalPrice }}元</div>
+				<div class="price" :class="{ 'highlight': totalPrice > 0 }">{{ totalPrice }}元</div>
 				<div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
 			</div>
 			<div class="content-right">
