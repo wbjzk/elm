@@ -2,7 +2,7 @@
 	<div class="goods">
 		<div class="menu-wrapper" ref="menuWrapper">
 			<ul>
-				<li class="menu-item" :class="{ 'current':currentIndex===i }" v-for="(item, i) in goods" :key="i" @click="selectMenu(i, $event)">
+				<li class="menu-item" :class="{ 'current':currentIndex === i }" v-for="(item, i) in goods" :key="i" @click="selectMenu(i, $event)">
 					<span class="text border-1px">
 						<v-icon v-show="item.type > 0" :type="item.type" :num="3"></v-icon>{{ item.name }}
 					</span>
@@ -31,7 +31,7 @@
 								</div>
 								<div class="cartcontrol-wrapper">
 									<!-- <div is="v-cartcontrol" :food="food"></div> -->
-									<v-cartcontrol :food="food"></v-cartcontrol>
+									<v-cartcontrol :food="food" @add="cartAdd"></v-cartcontrol>
 								</div>
 							</div>
 						</li>
@@ -39,7 +39,12 @@
 				</li>
 			</ul>
 		</div>
-		<v-shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></v-shopcart>
+		<v-shopcart
+			ref="shopcart"
+			:delivery-price="seller.deliveryPrice"
+			:min-price="seller.minPrice"
+			:selectFoods="selectFoods">
+		</v-shopcart>
 	</div>
 </template>
 <script>
@@ -103,6 +108,9 @@ export default {
 				height += item.clientHeight;
 				this.listHeight.push(height);
 			}
+		},
+		cartAdd(target) {
+			this.$refs.shopcart.drop(target);
 		}
 	},
 	computed: {
@@ -116,6 +124,17 @@ export default {
 			}
 			return 0;
 		},
+		selectFoods() {
+			let foods = [];
+			this.goods.forEach(good => {
+				good.foods.forEach(food => {
+					if (food.count) {
+						foods.push(food);
+					}
+				});
+			});
+			return foods;
+		}
 	},
 	components: {
 		'v-icon': icon,
