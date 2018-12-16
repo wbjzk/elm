@@ -110,7 +110,9 @@ export default {
 			}
 		},
 		cartAdd(target) {
-			this.$refs.shopcart.drop(target);
+			this.$nextTick(() => {
+				this.$refs.shopcart.drop(target);
+			});
 		}
 	},
 	computed: {

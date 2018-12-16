@@ -1,6 +1,7 @@
 <template>
 	<div class="shopcart">
-		<div class="content">
+		<!-- 购物车 start -->
+		<div class="content" @click.stop="toggleList">
 			<div class="content-left">
 				<div class="logo-wrapper">
 					<div class="logo" :class="{ 'highlight': totalCount > 0 }">
@@ -14,16 +15,43 @@
 				<div class="pay" :class="payClass">{{ payDesc }}</div>
 			</div>
 		</div>
-		<div class="ball-container" v-for="(ball, i) in balls" :key="i">
+		<!-- 购物车 end -->
+		<!-- 动画小球 start -->
+		<div class="ball-container" v-for="ball in balls" :key="ball.id">
 			<transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
 				<div class="ball" v-show="ball.show">
 					<div class="inner inner-hook"></div>
 				</div>
 			</transition>
 		</div>
+		<!-- 动画小球 end -->
+		<!-- 购物车详情页 start -->
+		<transition>
+			<div class="shopcart-list" v-show="listShow">
+				<div class="list-header">
+					<h2 class="title">购物车</h2>
+					<span class="empty">清空</span>
+				</div>
+				<div class="list-content">
+					<ul>
+						<li class="food" v-for="(food, index) in selectFoods" :key="index">
+							<span class="name">{{ food.name }}</span>
+							<div class="price">
+								<span>￥{{ food.price * food.count }}</span>
+							</div>
+							<div class="cartcontrol-wrapper">
+								<v-cartcontrol :food="food"></v-cartcontrol>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</transition>
+		<!-- 购物车详情页 end -->
 	</div>
 </template>
 <script>
+import cartcontrol from '@/components/cartcontrol/cartcontrol.vue';
 export default {
 	data() {
 		return {
@@ -50,6 +78,7 @@ export default {
 				},
 			],
 			dropBalls: [],
+			fold: true, // 是否折叠
 		};
 	},
 	props: {
@@ -105,19 +134,30 @@ export default {
 			} else {
 				return 'enough';
 			}
+		},
+		listShow: {
+		  	get() {
+		  		if (!this.totalCount) { // 1
+		  			return false;
+		  		}
+		    	return this.fold;
+		  	},
+		  	set() {
+		  		console.log('set');
+		    }
 		}
 	},
 	methods: {
 		drop(el) {
-			this.balls.forEach((item, i) => {
+			for (let i = 0; i < this.balls.length; i++) {
 				let ball = this.balls[i];
-				if(!ball.show) {
+				if (!ball.show) {
 					ball.show = true;
 					ball.el = el;
 					this.dropBalls.push(ball);
 					return;
 				}
-			});
+			}
 		},
 		beforeEnter(el) {
 			let count = this.balls.length;
@@ -155,11 +195,21 @@ export default {
 				ball.show = false;
 				el.style.display = 'none';
 			}
+		},
+		toggleList() {
+			if (!this.totalCount) {
+				return;
+			}
+			this.fold = !this.fold;
 		}
+	},
+	components: {
+		'v-cartcontrol': cartcontrol,
 	}
 }
 </script>
 <style lang="less" scoped>
+@import "../../common/style/mixin.less";
 .shopcart {
 	position: fixed;
 	left: 0;
@@ -230,6 +280,9 @@ export default {
 				border-right: 1px solid rgba(255,255,255,.1);
 				font-size: 16px;
 				font-weight: bold;
+				&.highlight {
+					color: #fff;
+				}
 			}
 			.desc {
 				display: inline-block;
@@ -274,5 +327,69 @@ export default {
 			}
 		}
 	}
+	.shopcart-list {
+		position: absolute;
+		left: 0;
+		z-index: -1;
+		width: 100%;
+		bottom: 48px;
+		.list-header {
+			height: 40px;
+			line-height: 40px;
+			padding: 0 18px;
+			background: #f3f5f7;
+			border-bottom: 1px solid rgba(7, 17, 27, .1);
+			.title {
+				float: left;
+				font-size: 14px;
+				color: rgb(7, 17, 27);
+			}
+			.empty {
+				float: right;
+				font-size: 12px;
+				color: rgb(0, 160, 220);
+			}
+		}
+		.list-content {
+			padding: 0 18px;
+			max-height: 217px;
+			overflow: hidden;
+			background: #fff;
+			.food {
+				position: relative;
+				padding: 12px 0;
+				box-sizing: border-box;
+				.border-1px(rgba(7, 17, 27, .1));
+				.name {
+					line-height: 24px;
+					font-size: 14px;
+					color: rgb(7, 17, 27);
+				}
+				.price {
+					position: absolute;
+					right: 90px;
+					bottom: 12px;
+					line-height: 24px;
+					font-size: 14px;
+					font-weight: bold;
+					color: rgb(240, 20, 20);
+				}
+				.cartcontrol-wrapper {
+					position: absolute;
+					right: 0;
+					bottom: 6px;
+				}
+			}
+		}
+	}
+}
+
+.v-enter,
+.v-leave-to {
+	transform: translate3d(0, 100%, 0);
+}
+.v-enter-active,
+.v-leave-active {
+	transition: all 1s linear;
 }
 </style>
