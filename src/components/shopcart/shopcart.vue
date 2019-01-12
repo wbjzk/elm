@@ -26,13 +26,13 @@
 			</transition>
 		</div>
 		<!-- 动画小球 end -->
-		
+
 		<!-- 购物车详情页 start -->
 		<transition>
 			<div class="shopcart-list" v-show="listShow">
 				<div class="list-header">
 					<h2 class="title">购物车</h2>
-					<span class="empty">清空</span>
+					<span class="empty" @click="empty">清空</span>
 				</div>
 				<div class="list-content" ref="listContent">
 					<ul>
@@ -229,7 +229,12 @@ export default {
 				return;
 			}
 			this.fold = !this.fold;
-		}
+		},
+		empty() {
+			this.selectFoods.forEach(food => {
+				food.count = 0;
+			});
+		},
 	},
 	components: {
 		'v-cartcontrol': cartcontrol,
