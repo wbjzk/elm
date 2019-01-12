@@ -16,6 +16,7 @@
 			</div>
 		</div>
 		<!-- 购物车 end -->
+
 		<!-- 动画小球 start -->
 		<div class="ball-container" v-for="ball in balls" :key="ball.id">
 			<transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
@@ -25,6 +26,7 @@
 			</transition>
 		</div>
 		<!-- 动画小球 end -->
+		
 		<!-- 购物车详情页 start -->
 		<transition>
 			<div class="shopcart-list" v-show="listShow">
@@ -32,7 +34,7 @@
 					<h2 class="title">购物车</h2>
 					<span class="empty">清空</span>
 				</div>
-				<div class="list-content">
+				<div class="list-content" ref="listContent">
 					<ul>
 						<li class="food" v-for="(food, index) in selectFoods" :key="index">
 							<span class="name">{{ food.name }}</span>
@@ -40,7 +42,7 @@
 								<span>￥{{ food.price * food.count }}</span>
 							</div>
 							<div class="cartcontrol-wrapper">
-								<v-cartcontrol :food="food"></v-cartcontrol>
+								<v-cartcontrol :food="food" @add="drop"></v-cartcontrol>
 							</div>
 						</li>
 					</ul>
@@ -51,6 +53,7 @@
 	</div>
 </template>
 <script>
+import BScroll from 'better-scroll';
 import cartcontrol from '@/components/cartcontrol/cartcontrol.vue';
 export default {
 	data() {
@@ -111,12 +114,16 @@ export default {
 			});
 			return total;
 		},
-		totalCount() {
-			let count = 0;
-			this.selectFoods.forEach(food => {
-				count += food.count;
-			});
-			return count;
+		totalCount: {
+			get() {
+				let count = 0;
+				this.selectFoods.forEach(food => {
+					count += food.count;
+				});
+				return count;
+			},
+			set() {
+			}
 		},
 		payDesc() {
 			if (this.totalPrice === 0) {
@@ -135,19 +142,40 @@ export default {
 				return 'enough';
 			}
 		},
-		listShow: {
+		listShow: { // 是否显示弹出层
 		  	get() {
 		  		if (!this.totalCount) { // 1
 		  			return false;
-		  		}
-		    	return this.fold;
+				}
+		    	return !this.fold;
 		  	},
 		  	set() {
-		  		console.log('set');
+		  		console.log('set');  
 		    }
 		}
 	},
+	watch: {
+		listShow() {
+			this.refreshScroll();
+		},
+		totalCount() {
+			this.refreshScroll();
+		},
+	},
 	methods: {
+		refreshScroll() {
+			if (!this.fold) { // 折叠fold为true的时候详情页不做修改，展开的时候设置执行if中的代码
+				this.$nextTick(() => {
+					if (!this.scroll) {
+						this.scroll = new BScroll(this.$refs.listContent, {
+							click: true,
+						});
+					} else {
+						this.scroll.refresh();
+					}
+				});
+			}
+		},
 		drop(el) {
 			for (let i = 0; i < this.balls.length; i++) {
 				let ball = this.balls[i];
@@ -205,7 +233,7 @@ export default {
 	},
 	components: {
 		'v-cartcontrol': cartcontrol,
-	}
+	},
 }
 </script>
 <style lang="less" scoped>
