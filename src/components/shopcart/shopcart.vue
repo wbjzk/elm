@@ -189,6 +189,7 @@ export default {
 				});
 			}
 		},
+		/*  */
 		drop(el) {
 			for (let i = 0; i < this.balls.length; i++) {
 				let ball = this.balls[i];
