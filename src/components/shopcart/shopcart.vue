@@ -12,7 +12,7 @@
 					<div class="price" :class="{ 'highlight': totalPrice > 0 }">{{ totalPrice }}元</div>
 					<div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
 				</div>
-				<div class="content-right">
+				<div class="content-right" @click.stop="pay">
 					<div class="pay" :class="payClass">{{ payDesc }}</div>
 				</div>
 			</div>
@@ -170,6 +170,12 @@ export default {
 		},
 	},
 	methods: {
+		pay() {
+			if(this.totalPrice < this.minPrice) {
+				return;
+			}
+			window.alert(`支付${this.totalPrice}元`);
+		},
 		refreshScroll() {
 			if (!this.fold) { // 折叠fold为true的时候详情页不做修改，展开的时候设置执行if中的代码
 				this.$nextTick(() => {
