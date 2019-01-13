@@ -1,55 +1,62 @@
 <template>
-	<div class="shopcart">
-		<!-- 购物车 start -->
-		<div class="content" @click.stop="toggleList">
-			<div class="content-left">
-				<div class="logo-wrapper">
-					<div class="logo" :class="{ 'highlight': totalCount > 0 }">
-						<span class="icon-shopping_cart" :class="{ 'highlight': totalCount > 0 }"></span>
+	<div>
+		<div class="shopcart">
+			<!-- 购物车 start -->
+			<div class="content" @click.stop="toggleList">
+				<div class="content-left">
+					<div class="logo-wrapper">
+						<div class="logo" :class="{ 'highlight': totalCount > 0 }">
+							<span class="icon-shopping_cart" :class="{ 'highlight': totalCount > 0 }"></span>
+						</div>
+					</div>
+					<div class="price" :class="{ 'highlight': totalPrice > 0 }">{{ totalPrice }}元</div>
+					<div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
+				</div>
+				<div class="content-right">
+					<div class="pay" :class="payClass">{{ payDesc }}</div>
+				</div>
+			</div>
+			<!-- 购物车 end -->
+
+			<!-- 动画小球 start -->
+			<div class="ball-container" v-for="ball in balls" :key="ball.id">
+				<transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+					<div class="ball" v-show="ball.show">
+						<div class="inner inner-hook"></div>
+					</div>
+				</transition>
+			</div>
+			<!-- 动画小球 end -->
+
+			<!-- 购物车详情页 start -->
+			<transition>
+				<div class="shopcart-list" v-show="listShow" @click.stop="hideList">
+					<div class="list-header">
+						<h2 class="title">购物车</h2>
+						<span class="empty" @click="empty">清空</span>
+					</div>
+					<div class="list-content" ref="listContent">
+						<ul>
+							<li class="food" v-for="(food, index) in selectFoods" :key="index">
+								<span class="name">{{ food.name }}</span>
+								<div class="price">
+									<span>￥{{ food.price * food.count }}</span>
+								</div>
+								<div class="cartcontrol-wrapper">
+									<v-cartcontrol :food="food" @add="drop"></v-cartcontrol>
+								</div>
+							</li>
+						</ul>
 					</div>
 				</div>
-				<div class="price" :class="{ 'highlight': totalPrice > 0 }">{{ totalPrice }}元</div>
-				<div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
-			</div>
-			<div class="content-right">
-				<div class="pay" :class="payClass">{{ payDesc }}</div>
-			</div>
-		</div>
-		<!-- 购物车 end -->
-
-		<!-- 动画小球 start -->
-		<div class="ball-container" v-for="ball in balls" :key="ball.id">
-			<transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
-				<div class="ball" v-show="ball.show">
-					<div class="inner inner-hook"></div>
-				</div>
 			</transition>
+			<!-- 购物车详情页 end -->
 		</div>
-		<!-- 动画小球 end -->
-
-		<!-- 购物车详情页 start -->
+		<!-- 遮罩层 start -->
 		<transition>
-			<div class="shopcart-list" v-show="listShow">
-				<div class="list-header">
-					<h2 class="title">购物车</h2>
-					<span class="empty" @click="empty">清空</span>
-				</div>
-				<div class="list-content" ref="listContent">
-					<ul>
-						<li class="food" v-for="(food, index) in selectFoods" :key="index">
-							<span class="name">{{ food.name }}</span>
-							<div class="price">
-								<span>￥{{ food.price * food.count }}</span>
-							</div>
-							<div class="cartcontrol-wrapper">
-								<v-cartcontrol :food="food" @add="drop"></v-cartcontrol>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
+			<div class="list-mask" @click="hideList" v-show="listShow"></div>
 		</transition>
-		<!-- 购物车详情页 end -->
+		<!-- 遮罩层 end -->
 	</div>
 </template>
 <script>
@@ -235,6 +242,9 @@ export default {
 				food.count = 0;
 			});
 		},
+		hideList() {
+			this.fold = true;
+		},
 	},
 	components: {
 		'v-cartcontrol': cartcontrol,
@@ -414,15 +424,33 @@ export default {
 				}
 			}
 		}
+		&.v-enter,
+		&.v-leave-to {
+			transform: translate3d(0, 100%, 0);
+		}
+		&.v-enter-active,
+		&.v-leave-active {
+			transition: all 1s linear;
+		}
 	}
 }
+.list-mask {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 40;
+	backdrop-filter: blur(10px);
+	background: rgba(7, 17, 27, .6);
+	&.v-enter,
+	&.v-leave-to {
+		opacity: 0;
+	}
 
-.v-enter,
-.v-leave-to {
-	transform: translate3d(0, 100%, 0);
-}
-.v-enter-active,
-.v-leave-active {
-	transition: all 1s linear;
+	&.v-enter-active,
+	&.v-leave-active {
+		transition: all .5s linear;
+	}
 }
 </style>
