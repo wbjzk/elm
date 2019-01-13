@@ -29,18 +29,18 @@
                         <span class="now">￥{{ food.price }}</span><span class="old" v-show="food.oldPrice">￥{{ food.oldPrice }}</span>
                     </div>
 
+                    <!-- 数量控制器 start -->
+                    <div class="cartcontrol-wrapper">
+                        <v-cartcontrol :food="food" @add="drop"></v-cartcontrol>
+                    </div>
+                    <!-- 数量控制器 end -->
+
+                    <!-- 加入购物车按钮 start -->
+                    <div class="buy" v-show="!food.count || food.count === 0" @click="addFirst">加入购物车</div>
+                    <!-- 加入购物车按钮 end -->
                 </div>
                 <!-- 详情页内容 end -->
-
-                <!-- 数量控制器 start -->
-                <div class="cartcontrol-wrapper">
-                    <v-cartcontrol :food="food" @add="drop"></v-cartcontrol>
-                </div>
-                <!-- 数量控制器 end -->
-
-                <!-- 加入购物车按钮 start -->
-                <div class="buy" v-show="!food.count || food.count === 0" @click="addFirst">加入购物车</div>
-                <!-- 加入购物车按钮 end -->
+                <v-split></v-split>
             </div>
         </div>
     </transition>
@@ -48,6 +48,7 @@
 <script>
 import BScroll from 'better-scroll';
 import cartcontrol from '../cartcontrol/cartcontrol.vue';
+import split from '../split/split.vue';
 export default {
     props: {
         food: {
@@ -89,6 +90,7 @@ export default {
     },
     components: {
         'v-cartcontrol': cartcontrol,
+        'v-split': split,
     }
 };
 </script>
@@ -139,6 +141,7 @@ export default {
             }
         }
         .content {
+            position: relative;
             padding: 10px;
             .title {
                 line-height: 14px;
@@ -175,24 +178,24 @@ export default {
                     color: rgb(147, 153, 159);
                 }
             }
-        }
-        .cartcontrol-wrapper {
-            position: absolute;
-            right: 12px;
-            bottom: 12px;
-        }
-        .buy {
-            position: absolute;
-            right: 18px;
-            bottom: 18px;
-            z-index: 10;
-            height: 24px;
-            line-height: 24px;
-            padding: 0 12px;
-            box-sizing: border-box;
-            border-radius: 12px;
-            font-size: 10px;
-            background: rgb(0, 160, 220);
+            .cartcontrol-wrapper {
+                position: absolute;
+                right: 12px;
+                bottom: 12px;
+            }
+            .buy {
+                position: absolute;
+                right: 18px;
+                bottom: 18px;
+                z-index: 10;
+                height: 24px;
+                line-height: 24px;
+                padding: 0 12px;
+                box-sizing: border-box;
+                border-radius: 12px;
+                font-size: 10px;
+                background: rgb(0, 160, 220);
+            }
         }
     }
 }
