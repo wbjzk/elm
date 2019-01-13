@@ -40,7 +40,17 @@
                     <!-- 加入购物车按钮 end -->
                 </div>
                 <!-- 详情页内容 end -->
+
+                <!-- 分隔间隙 start -->
                 <v-split></v-split>
+                <!-- 分隔间隙 end -->
+
+                <!-- 商品信息 start -->
+                <div class="info" v-show="food.info">
+                    <div class="title">商品信息</div>
+                    <p class="text">{{ food.info }}</p>
+                </div>
+                <!-- 商品信息 end -->
             </div>
         </div>
     </transition>
@@ -195,6 +205,21 @@ export default {
                 border-radius: 12px;
                 font-size: 10px;
                 background: rgb(0, 160, 220);
+            }
+        }
+        .info {
+            padding: 18px;
+            .title {
+                line-height: 14px;
+                margin-bottom: 6px;
+                font-size: 14px;
+                color: rgb(7, 17, 27);
+            }
+            .text {
+                line-height: 24px;
+                padding: 0 8px;
+                font-size: 12px;
+                color: rgb(77, 85, 93);
             }
         }
     }
