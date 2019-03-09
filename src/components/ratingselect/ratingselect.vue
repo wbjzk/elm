@@ -51,14 +51,6 @@ export default {
             },
         },
     },
-    methods: {
-        select(type, event) {
-            this.$emit('select', {type: type, event: event});
-        },
-        toggleContent(event) {
-            this.$emit('toggle', event);
-        }
-    },
     computed: {
         positives() {
             return this.ratings.filter(rating => {
@@ -70,7 +62,15 @@ export default {
                 return rating.rateType === NEGATIVE;
             });
         }
-    }
+    },
+    methods: {
+        select(type, event) {
+            this.$emit('select', {type: type, event: event});
+        },
+        toggleContent(event) {
+            this.$emit('toggle', event);
+        }
+    },
 };
 </script>
 <style lang="less" scoped>

@@ -2,6 +2,7 @@
   <transition>
     <div v-show="showFlag" class="food" ref="food">
       <div class="food-content">
+
         <!-- 详情页头部 start -->
         <div class="image-header">
           <img :src="food.image">
@@ -10,6 +11,7 @@
           </div>
         </div>
         <!-- 详情页头部 start -->
+
         <!-- 详情页内容 start -->
         <div class="content">
           <!-- 食物名称 -->
@@ -39,18 +41,22 @@
 
         </div>
         <!-- 详情页内容 end -->
+
         <!-- 分隔间隙 start -->
         <v-split></v-split>
         <!-- 分隔间隙 end -->
+
         <!-- 商品信息 start -->
         <div class="info" v-show="food.info">
           <div class="title">商品信息</div>
           <p class="text">{{ food.info }}</p>
         </div>
         <!-- 商品信息 end -->
+
         <!-- 分隔间隙 start -->
         <v-split></v-split>
         <!-- 分隔间隙 end -->
+
         <!-- 商品评价 start -->
         <div class="rating">
           <h2 class="title">商品评价</h2>
@@ -69,19 +75,20 @@
                   <span class="name">{{ rating.username }}</span>
                   <img class="avatar" width="12" height="12" :src="rating.avatar">
                 </div>
-                <div class="time">{{ rating.rateTime }}</div>
+                <div class="time">{{ rating.rateTime | formatDate }}</div>
                 <p class="text">
                   <span
-                    :class="{ 'icon-thumb_up': rating.rateType === 0 , 'icon-thumb_down': rating.rateType ===1 }"
+                    :class="{ 'icon-thumb_up': rating.rateType === 0 , 'icon-thumb_down': rating.rateType === 1 }"
                   ></span>
                   {{ rating.text }}
                 </p>
               </li>
             </ul>
-            <div class="no-rating" v-show="!food.ratings || !food.ratings.length"></div>
+            <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评论</div>
           </div>
         </div>
         <!-- 商品评价 end -->
+
       </div>
     </div>
   </transition>
@@ -91,12 +98,24 @@ import BScroll from "better-scroll";
 import cartcontrol from "../cartcontrol/cartcontrol.vue";
 import split from "../split/split.vue";
 import ratingselect from "../ratingselect/ratingselect.vue";
+import { formatDate } from "@/common/js/date.js";
 
 const POSITIVE = 0;
 const NEGATIVE = 1;
 const ALL = 2;
 
 export default {
+  components: {
+    "v-cartcontrol": cartcontrol,
+    "v-split": split,
+    "v-ratingselect": ratingselect
+  },
+  filters: {
+    formatDate(time) {
+      let date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd hh:m');
+    }
+  },
   props: {
     food: {
       type: Object
@@ -113,12 +132,6 @@ export default {
         negative: "吐槽"
       }
     };
-  },
-
-  components: {
-    "v-cartcontrol": cartcontrol,
-    "v-split": split,
-    "v-ratingselect": ratingselect
   },
   methods: {
     show() {
@@ -159,16 +172,17 @@ export default {
       });
     },
     toggleContent(event) {
+      // 排除原生单击事件
       if (!event._constructed) {
         return;
       }
       this.onlyContent = !this.onlyContent;
+      // 将回调延迟到下次DOM更新循环之后执行
       this.$nextTick(() => {
         this.scroll.refresh();
       });
     },
     needShow(type, text) {
-      // 
       if (this.onlyContent && !text) {
         return false;
       }
@@ -354,6 +368,11 @@ export default {
               color: rgb(147, 153, 159);
             }
           }
+        }
+        .no-rating {
+            padding: 16px 0;
+            font-size: 12px;
+            color: rgb(147,153,159);
         }
       }
     }
