@@ -1,7 +1,380 @@
 <template>
 	<div>
-		ratings
+		<div class="ratings" ref="ratings">
+			<div class="ratings-content">
+				<div class="overview">
+					<div class="overview-left">
+						<h2 class="score">{{ seller.score }}</h2>
+						<div class="title">综合评分</div>
+						<div class="rank">高于周边商家{{ seller.rankRate }}%</div>
+					</div>
+					<div class="overview-right">
+						<div class="score-wrapper">
+							<span class="title">服务态度</span>
+							<v-star :size="36" :score="seller.serviceScore"></v-star>
+							<span class="score">{{ seller.serviceScore }}</span>
+						</div>
+						<div class="score-wrapper">
+							<span class="title">商品评分</span>
+							<v-star :size="36" :score="seller.foodScore"></v-star>
+							<span class="score">{{ seller.foodScore }}</span>
+						</div>
+						<div class="delivery-wrapper">
+							<span class="title">送达时间</span>
+							<span class="delivery">{{ seller.deliveryTime }}分钟</span>
+						</div>
+					</div>
+				</div>
+				<v-split></v-split>
+				<v-ratingselect
+					@select="select"
+					@toggle="toggle"
+					:select-type="selectType"
+					:only-content="onlyContent"
+					:desc="desc"
+					:ratings="ratings">
+				</v-ratingselect>
+				<div class="rating-wrapper">
+					<ul>
+						<li class="rating-item"
+							v-for="(rating, index) of ratings"
+							:key="index"
+							v-show="needShow(rating.rateType, rating.text)">
+							<div class="avatar">
+								<img width="28" height="28" :src="rating.avatar">
+							</div>
+							<div class="content">
+								<h2 class="name">{{ rating.username }}</h2>
+								<div class="star-wrapper">
+									<v-star
+										:size="24"
+										:score="rating.score">
+									</v-star>
+									<span class="delivery" v-show="rating.deliveryTime">{{ rating.deliveryTime }}</span>
+								</div>
+								<p class="text">{{ rating.text }}</p>
+								<div class="recommend"
+									v-show="rating.recommend && rating.recommend.length">
+									<span class="icon-thumb_up"></span>
+									<span class="item"
+										v-for="(item, index) of rating.recommend"
+										:key="index">
+										{{ item }}
+									</span>
+								</div>
+								<div class="time">{{ rating.rateTime | formatDate }}</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
-<script></script>
-<style></style>
+<script>
+import star from '@/components/star/star.vue';
+import ratingselect from '@/components/ratingselect/ratingselect.vue';
+import split from '@/components/split/split.vue';
+import BScroll from 'better-scroll';
+import { formatDate } from "@/common/js/date.js";
+
+const POSITIVE = 0;
+const NEGATIVE = 1;
+const ALL = 2;
+const ERR_OK = 0;
+
+export default {
+	components:{
+		'v-star': star,
+		'v-split': split,
+		'v-ratingselect': ratingselect,
+	},
+	filters: {
+    formatDate(time) {
+			let date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd hh:mm');
+    }
+  },
+	props: {
+		seller: {
+			type: Object,
+		}
+	},
+	data() {
+		return {
+			ratings: [],
+			selectType: ALL,
+			onlyContent: false,
+			desc: {
+				all: '全部',
+				positive: '满意',
+				negative: '不满意',
+			}
+		};
+	},
+	created() {
+		this.getRatings();
+	},
+	methods: {
+		$_initScroll() {
+			// 将回调延迟到下次DOM更新后进行渲染
+			this.$nextTick(() => {
+				if (!this.scroll) {
+					this.ratingsScroll = new BScroll(this.$refs.ratings, {
+						click: true
+					});
+				} else {
+					this.ratingsScroll.refresh();
+				}
+			});
+		},
+		getRatings() {
+			this.axios('/api/ratings').then(response => {
+				if(response.data.errno === ERR_OK) {
+					this.ratings = response.data.ratings;
+					this.$_initScroll();
+				}
+			}).catch(error => {
+				console.log(error);
+			});
+		},
+		select(obj) {
+			if (!obj.event._constructed) {
+				return;
+			}
+			this.selectType = obj.type;
+			this.$nextTick(() => {
+				this.ratingsScroll.refresh();
+			});
+		},
+		toggle(event) {
+			if (!event._constructed) {
+				return;
+			}
+			this.onlyContent = !this.onlyContent;
+			this.$nextTick(() => {
+				this.ratingsScroll.refresh();
+			});
+		},
+		needShow(type, text){
+			if (this.onlyContent && !text) {
+				return false;
+			}
+
+			if (this.selectType === ALL) {
+				return true;
+			} else {
+				return type === this.selectType;
+			}
+		}
+	}
+}
+</script>
+<style lang="less" scoped>
+@import "../../common/style/mixin.less";
+* {
+	touch-action: pan-y;
+}
+
+.ratings {
+	background-color: skyblue;
+	position: absolute;
+	top: 174px;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	.ratings-content {
+		background-color: pink;
+		
+		.overview {
+			background-color: yellowgreen;
+			display: flex;
+			padding: 18px;
+			.overview-left {
+				background-color: aqua;
+				flex: 0 0 137px;
+				padding: 6px 0;
+				width: 137px;
+				border-right: 1px solid rgba(7, 17, 27, 0.1);
+				text-align: center;
+
+				@media only screen and (max-width: 320px) {
+					flex: 0 0 120px;
+					width: 120px;
+				}
+				.score {
+					background-color:beige;
+					margin-bottom: 6px;
+					line-height: 28px;
+					font-size: 24px;
+					color: rgb(255, 153, 0);
+				}
+				.title {
+					background-color: powderblue;
+					margin-bottom: 8px;
+					line-height: 12px;
+					font-size: 12px;
+					color: rgb(7, 17, 27);
+				}
+				.rank {
+					background-color: hotpink;
+					line-height: 10px;
+					font-size: 10px;
+					color: rgb(147, 153, 159);
+				}
+			}
+			
+			.overview-right {
+				background-color: purple;
+				flex: 1;
+				padding: 6px 0 6px 24px;
+				@media only screen and (max-width: 320px) {
+					padding-left: 6px;
+				}
+				.score-wrapper {
+					background-color: aliceblue;
+					margin-bottom: 8px;
+					font-size: 0;
+					.title {
+						background-color: gray;
+						display: inline-block;
+						line-height: 18px;
+						vertical-align: top;
+						font-size:12px;
+						color: rgb(7, 17, 27);
+					}
+					.star {
+						background-color: powderblue;
+						display: inline-block;
+						margin: 0 6px;
+						vertical-align: top;
+					}
+					.score {
+						background-color: yellow;
+						line-height: 18px;
+						vertical-align: top;
+						font-size: 12px;
+						color: rgb(255, 153, 0);
+					}
+				}
+
+				.delivery-wrapper {
+					background-color: coral;
+					font-size: 0;
+					.title {
+						line-height: 18px;
+						font-size: 12px;
+						color: rgb(7, 17, 27);
+					}
+					.delivery {
+						background-color: bisque;
+						margin-left: 12px;
+						font-size: 12px;
+						color: rgb(147, 153, 159);
+					}
+				}
+			}
+		}
+
+		.rating-wrapper {
+			background-color: skyblue;
+			padding: 0 18px;
+			.rating-item {
+				background-color: aliceblue;
+				display: flex;
+				padding: 18px 0;
+				.border-1px(rgba(7, 17, 27, 0.1));
+				.avatar {
+					background-color: burlywood;
+					flex: 0 0 28px;
+					width: 28px;
+					margin-right: 12px;
+
+					img {
+						border-radius: 50%;
+					}
+				}
+				.content {
+					background-color: cadetblue;
+					position: relative;
+					flex: 1;
+					
+					.name {
+						background-color: darkgrey;
+						margin-bottom: 4px;
+						line-height: 12px;
+						font-size: 10px;
+						color: rgb(7, 17, 27);
+					}
+
+					.star-wrapper {
+						background-color: firebrick;
+						margin-bottom: 6px;
+						font-size: 0;
+
+						.star {
+							background-color: ghostwhite;
+							display: inline-block;
+							margin-right: 6px;
+							vertical-align: top;
+						}
+						
+						.delivery {
+							background-color: hotpink;
+							display: inline-block;
+							font-size: 10px;
+							line-height: 10px;
+							color: rgb(147, 153, 159);
+						}
+					}
+
+					.text {
+						background-color: indianred;
+						margin-bottom: 8px;
+						line-height: 18px;
+						color: rgb(7, 17, 27);
+						font-size: 12px;
+					}
+
+					.recommend {
+						background-color: khaki;
+						line-height: 16px;
+						font-size: 0;
+						.icon-thumb_up,
+						.item {
+							background-color: lawngreen;
+							display: inlien-block;
+							margin: 0 8px 4px 0;
+							font-size: 9px;
+						}
+
+						.icon-thumb_up {
+							background-color: maroon;
+							color: rgb(0, 160, 220);
+						}
+
+						.item {
+							background-color: olive;
+							padding: 0 6px;
+							border: 1px solid rgba(7, 17, 27, 0.1);
+							border-radius: 1px;
+							color: rgb(147, 153, 159);
+							background: #fff;
+						}
+					}
+
+					.time {
+						position: absolute;
+						top: 0;
+						right: 0;
+						line-height: 12px;
+						font-size: 10px;
+						color: rgb(147, 153, 159);
+					}
+				}
+			}
+		}
+	}
+}
+</style>
