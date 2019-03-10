@@ -31,14 +31,23 @@
 				</li>
 			</ul>
 		</div>
+		<v-split></v-split>
+		<div class="bulletin">
+			<div class="title">公告与活动</div>
+			<div class="content-wrapper">
+				<p class="content">{{ seller.bulletin }}</p>
+			</div>
+		</div>
 	</div>
 </template>
 <script>
 import star from '@/components/star/star';
+import split from '@/components/split/split.vue';
 export default {
 	name: 'seller',
 	components: {
 		'v-star': star,
+		'v-split': split,
 	},
 	props: {
 		seller: {
@@ -127,6 +136,26 @@ export default {
 					}
 				}
 			}
+		}
+	}
+
+	.bulletin {
+		background-color: purple;
+		padding: 18px 18px 0 18px;
+
+		.title {
+			background-color: hotpink;
+			margin-bottom: 8px;
+			line-height: 14px;
+			color: rgb(7, 17, 27);
+			font-size: 14px;
+		}
+
+		.content-wrapper {
+			background-color: beige;
+			line-height: 24px;
+			font-size: 12px;
+			color: rgb(240, 20, 20);
 		}
 	}
 }
