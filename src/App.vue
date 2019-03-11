@@ -27,6 +27,15 @@ export default {
       this.axios.get('api/seller').then(res => {
         if(res.data.errno === 0) {
           this.seller = res.data.seller;
+          this.seller.picList = [];
+          this.seller.pics.forEach(src => {
+            let item = {};
+            item.src = src;
+            item.msrc = src;
+            item.w = 300;
+            item.h = 200;
+            this.seller.picList.push(item);
+          });
         }
       }).catch(error => {
         console.log(error);

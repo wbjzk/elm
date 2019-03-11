@@ -6,8 +6,10 @@ import router from './router';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import '@/common/style/index.less';
+import VuePreview from 'vue-preview';
 
 Vue.use(VueAxios, axios);
+Vue.use(VuePreview);
 
 Vue.config.productionTip = false
 

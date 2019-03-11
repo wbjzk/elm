@@ -35,7 +35,7 @@ export default {
 	.bg-image('discount_1');
 }
 
-.gurantee-1 {
+.guarantee-1 {
 	.bg-image('guarantee_1');
 }
 
@@ -55,7 +55,7 @@ export default {
 	.bg-image('discount_2');
 }
 
-.gurantee-2 {
+.guarantee-2 {
 	.bg-image('guarantee_2');
 }
 
@@ -74,7 +74,7 @@ export default {
 	.bg-image('discount_3');
 }
 
-.gurantee-3 {
+.guarantee-3 {
 	.bg-image('guarantee_3');
 }
 
@@ -84,5 +84,25 @@ export default {
 
 .special-3 {
 	.bg-image('special_3');
+}
+
+.decrease-4 {
+	.bg-image('decrease_4');
+}
+
+.discount-4 {
+	.bg-image('discount_4');
+}
+
+.guarantee-4 {
+	.bg-image('guarantee_4');
+}
+
+.invoice-4 {
+	.bg-image('invoice_4');
+}
+
+.special-4 {
+	.bg-image('special_4');
 }
 </style>
