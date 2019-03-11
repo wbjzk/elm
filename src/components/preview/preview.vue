@@ -55,16 +55,13 @@ export default {
 </script>
 <style lang="less">
 .thumbs {
-  background-color: gold;
   display: block;
   height: 100px;
   white-space: nowrap;
   overflow: hidden;
 
   .my-gallery {
-    background-color: red;
     figure {
-      background-color: blue;
       display: inline-block;
       margin-right: 6px;
 
